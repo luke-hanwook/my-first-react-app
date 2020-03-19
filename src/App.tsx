@@ -1,21 +1,31 @@
-import React, { Component, Fragment } from "react";
-import Header from "../src/components/Header";
-import SearchForm from "../src/components/SearchForm";
-import SearchResultList from "../src/components/SearchResultList";
-import Tab from "../src/components/Tab";
-import List from "../src/components/List";
+import React from "react";
+import Header from "./components/Header";
+import SearchForm, { SearchState } from "./components/SearchForm";
+import SearchResultList from "./components/SearchResultList";
+import Tab from "./components/Tab";
+import List from "./components/List";
 
-import SearchModel from "../src/models/SearchModel";
-import KeywordModel from "../src/models/KeywordModel";
-import HistoryModel from "../src/models/HistoryModel";
+import SearchModel, { SearchData } from "./models/SearchModel";
+import KeywordModel, { KeywordData } from "./models/KeywordModel";
+import HistoryModel, { HistoryData } from "./models/HistoryModel";
 
-class App extends Component {
-  state = {
+type State = {
+  searchList: SearchData[];
+  keywordList: KeywordData[];
+  historyList: HistoryData[];
+  tabs: ["추천 검색어", "최근 검색어"];
+  selectedTab: "추천 검색어" | "최근 검색어";
+  isSubmit: boolean;
+  query: string;
+};
+
+class App extends React.Component<{}, State> {
+  state: State = {
     searchList: [],
     keywordList: [],
     historyList: [],
     tabs: ["추천 검색어", "최근 검색어"],
-    selectedTab: "",
+    selectedTab: "추천 검색어",
     isSubmit: false,
     query: ""
   };
@@ -24,12 +34,9 @@ class App extends Component {
     // api 호출
     this._fetchKeyword();
     this._fetchHistory();
-    this.setState({
-      selectedTab: this.state.tabs[0]
-    });
   }
 
-  _fetchKeyword = _ => {
+  _fetchKeyword = () => {
     KeywordModel.list().then(res => {
       this.setState({
         keywordList: res
@@ -37,7 +44,7 @@ class App extends Component {
     });
   };
 
-  _fetchHistory = _ => {
+  _fetchHistory = () => {
     HistoryModel.list().then(res => {
       this.setState({
         historyList: res
@@ -45,8 +52,8 @@ class App extends Component {
     });
   };
 
-  _fetchSearch = keyword => {
-    SearchModel.list(keyword).then(res => {
+  _fetchSearch = (keyword: string) => {
+    SearchModel.list().then(res => {
       this.setState({
         searchList: res,
         isSubmit: true
@@ -57,18 +64,18 @@ class App extends Component {
   };
 
   // handle the SearchForm
-  _handleCreate = data => {
+  _handleCreate = (data: SearchState) => {
     const { keyword } = data;
     this._fetchSearch(keyword);
   };
 
-  _handleQuery = data => {
+  _handleQuery = (data: string) => {
     this.setState({
       query: data
     });
   };
 
-  _handleReset = _ => {
+  _handleReset = () => {
     this.setState({
       searchList: [],
       isSubmit: false,
@@ -77,21 +84,21 @@ class App extends Component {
   };
 
   // handle the tabs
-  _handleChangeTab = t => {
+  _handleChangeTab = (t: "추천 검색어" | "최근 검색어") => {
     this.setState({
       selectedTab: t
     });
   };
 
   // handle the List
-  _handleClickKeyword = data => {
+  _handleClickKeyword = (data: string) => {
     this.setState({
       query: data
     });
     this._fetchSearch(data);
   };
 
-  _handleClickRemoveBtn = data => {
+  _handleClickRemoveBtn = (data: string) => {
     HistoryModel.remove(data);
     this._fetchHistory();
   };
@@ -99,14 +106,12 @@ class App extends Component {
   // condition rendering
   _renderList = () => {
     let list = this.state.keywordList;
-    let type = "keyword";
     if (this.state.selectedTab !== this.state.tabs[0]) {
       list = this.state.historyList;
-      type = "history";
     }
 
     return (
-      <Fragment>
+      <React.Fragment>
         <Tab
           tabs={this.state.tabs}
           selectedTab={this.state.selectedTab}
@@ -114,11 +119,10 @@ class App extends Component {
         />
         <List
           list={list}
-          type={type}
           onClickKeyword={this._handleClickKeyword}
           onClickRemove={this._handleClickRemoveBtn}
         />
-      </Fragment>
+      </React.Fragment>
     );
   };
 
