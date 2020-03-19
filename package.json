@@ -5,10 +5,16 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
+    "@types/classnames": "^2.2.10",
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.9.2",
+    "@types/react": "^16.9.23",
+    "@types/react-dom": "^16.9.5",
     "classnames": "2.2.6",
     "react": "16.8.0",
     "react-dom": "16.8.0",
-    "react-scripts": "2.0.3"
+    "react-scripts": "3.4.0",
+    "typescript": "^3.8.3"
   },
   "devDependencies": {},
   "scripts": {
@@ -17,5 +23,10 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
   },
-  "browserslist": [">0.2%", "not dead", "not ie <= 11", "not op_mini all"]
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ]
 }

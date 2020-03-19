@@ -1,6 +1,11 @@
-import React from "react";
+import * as React from "react";
+import { SearchData } from "../models/SearchModel";
 
-const SearchResultList = props => {
+type Props = {
+  list: SearchData[];
+};
+
+const SearchResultList: React.FC<Props> = props => {
   return (
     <div id="search-result">
       <ul>

@@ -1,7 +1,15 @@
-import React, { Component } from "react";
+import * as React from "react";
 import ListInfo from "./ListInfo";
+import { KeywordData } from "../models/KeywordModel";
+import { HistoryData } from "../models/HistoryModel";
 
-class List extends Component {
+type ListProps = {
+  list: Array<KeywordData | HistoryData>;
+  onClickKeyword: (data: string) => void;
+  onClickRemove: (data: string) => void;
+};
+
+class List extends React.Component<ListProps, {}> {
   render() {
     return (
       <div>
@@ -10,7 +18,6 @@ class List extends Component {
             <ListInfo
               li={li}
               i={i}
-              type={this.props.type}
               key={i}
               onClickKeyword={this.props.onClickKeyword}
               onClickRemove={this.props.onClickRemove}
